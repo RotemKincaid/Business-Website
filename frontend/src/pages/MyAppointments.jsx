@@ -1,6 +1,8 @@
 const MyAppointments = () => {
   return (
-    <div>MyAppointments</div>
+    <div>
+      <p>My Appointments</p>
+    </div>
   )
 }
 
