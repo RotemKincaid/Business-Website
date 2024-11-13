@@ -12,10 +12,10 @@ const Contact = () => {
 
         <div className="flex flex-col justify-center items-start gap-6">
           <p className="font-semibold text-lg text-gray-600">OUR OFFICE</p>
-          <p className="text-gray-500">123 Street <br />
+          <p className="text-gray-500">123 Whatever Street <br />
             Suite 101, Gilbert, AZ, USA
           </p>
-          <p className="text-gray-500">Tel (123) 456-7890 <br/> smoothglow@gmail.com</p>
+          <p className="text-gray-500">Tel (123) 456-7890 <br/> illumi@gmail.com</p>
 
           <button></button>
         </div>

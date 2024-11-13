@@ -12,9 +12,9 @@ const TreatmentMenu = () => {
         </p>
         <div className='flex sm:justify-center gap-4 pt-5 w-full overflow-scroll'>
         {treatmentsData.map((item, index) => (
-            <Link onClick={() => scrollTo(0, 0)} className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500" key={index} to={item.treatment}>
-                <img src={item.image} alt="" className='w-40 sm:w-24 mb-2'/>
-                <p>{item.treatment}</p>
+            <Link onClick={() => scrollTo(0, 0)} className="flex flex-col items-center text-xs cursor-pointer flex-shrink-0 hover:translate-y-[-10px] transition-all duration-500" key={index} to={`services/${item.name}`}>
+                <img src={item.imageIcon} alt="" className='w-40 sm:w-24 mb-2'/>
+                <p>{item.name}</p>
             </Link>
         ))}
         </div>

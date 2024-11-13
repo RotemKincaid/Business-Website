@@ -1,6 +1,8 @@
 import { assets } from "../assets/assets"
+import { AppContext } from "../context/AppContext"
 
 const About = () => {
+  const { businessName } = AppContext
   return (
     <div>
       <div className="text-center text-2xl pt-10 text-gray-500">
@@ -10,10 +12,10 @@ const About = () => {
       <div className="my-10 flex flex-col md:flex-row gap-12">
         <img className="w-[550px] h-[550px] md:w-[350px] md:h-[350px]" src={assets.tattMachine} alt="" />
         <div className="flex flex-col justify-center gap-6 md:w-2/4 text-sm text-gray-600">
-          <p>Welcome to Smooth Glow By Ro – Where Confidence Meets Camouflage
+          <p>Welcome to {businessName} – Where Confidence Meets Camouflage
 
          </p>
-          <p> At Smooth Glow, we specialize in paramedical tattoo treatments designed to restore confidence and help you feel your best in your own skin. Whether you’re looking to reduce the visibility of scars, stretch marks, or other skin imperfections, our expert treatments blend seamlessly with your natural skin tone, offering a long-lasting and natural-looking solution.</p>
+          <p> At {businessName}, we specialize in paramedical tattoo treatments designed to restore confidence and help you feel your best in your own skin. Whether you’re looking to reduce the visibility of scars, stretch marks, or other skin imperfections, our expert treatments blend seamlessly with your natural skin tone, offering a long-lasting and natural-looking solution.</p>
           <b className="text-gray-800">Our Expertise:</b> <span> We focus on two key treatments:</span>
           <ul>
             <li>Scar Camouflage: Using advanced tattooing techniques, we match pigments to your skin tone, reducing the visibility of scars from surgeries, injuries, or skin conditions. Our goal is to help you feel comfortable and confident by making scars less noticeable.
@@ -22,7 +24,7 @@ const About = () => {
 
           </ul>
           <b></b>
-          {/* <p>At Smooth Glow, we understand that every client is unique. We take pride in offering personalized treatments tailored to your specific skin type and goals. Our mission is to provide not just a cosmetic service, but also a boost to your self-esteem by delivering results that look and feel natural. We’re dedicated to making sure you leave our studio feeling empowered and confident.
+          {/* <p>At {businessName}, we understand that every client is unique. We take pride in offering personalized treatments tailored to your specific skin type and goals. Our mission is to provide not just a cosmetic service, but also a boost to your self-esteem by delivering results that look and feel natural. We’re dedicated to making sure you leave our studio feeling empowered and confident.
 
           Our Commitment to You:
 

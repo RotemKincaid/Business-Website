@@ -82,7 +82,7 @@ const Appointment = () => {
       {/* --------- Service Details -------- */}
       <div className='flex flex-col sm:flex-row gap-4'>
         <div>
-          <img className="bg-primary w-[400px] sm:max-w-[90vw] rounded-lg" src={serviceInfo.image2} alt="" />
+          <img className="bg-primary w-[400px] sm:max-w-[90vw] rounded-lg" src={serviceInfo.image} alt="" />
         </div>
         <div className='flex-1 border border-gray-400 rounded-lg p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0'>
           {/* ------- service info - name -------  */}
@@ -94,7 +94,7 @@ const Appointment = () => {
               About 
               <img className="w-4" src={assets.infoIcon}/>
             </p>
-            <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{serviceInfo.expDesc}</p>
+            <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{serviceInfo.description}</p>
           </div>
           <p className='text-graay-500 font-medium mt-4'>
             Appointment Fee: <span className='text-gray-600'>{currencySymbol}299</span>
