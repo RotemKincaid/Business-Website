@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { base64profileImg } from "./modelUtils"
+import { base64profileImg } from "./modelUtils.js"
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
