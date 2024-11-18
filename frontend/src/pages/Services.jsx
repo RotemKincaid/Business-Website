@@ -8,19 +8,19 @@ const Services = () => {
   const { service } = useParams()
   const [ filterTreatment, setFilterTreatment ] = useState([])
   const [showFilter, setShowFilter ] = useState(false)
-  const { treatmentsData } = useContext(AppContext)
+  const { services } = useContext(AppContext)
 
   const applyFilter = () => {
     if (service) {
-      setFilterTreatment(treatmentsData.filter(t => t.name === service))
+      setFilterTreatment(services.filter(t => t.name === service))
     } else {
-      setFilterTreatment(treatmentsData)
+      setFilterTreatment(services)
     }
   }
 
   useEffect(() => {
     applyFilter()
-  }, [treatmentsData, service])
+  }, [services, service])
 
   return (
     <div>
@@ -35,7 +35,7 @@ const Services = () => {
           {
             filterTreatment.map((t, idx) => (
               <div key={idx} onClick={() => navigate(`/appointment/${t._id}`)} className="border border-gray-50 hover:translate-y-[-10px] transition-all duration-500 cursor-pointer">
-                <img className="bg-blue-50 w-40 p-4" src={t.image} alt="" />
+                <img className="bg-blue-50 w-40 p-4" src={t.image_icon} alt="" />
                 <div className="p-4">
                   <div className="flex items-center gap-2 text-sm text-center text-green-500">
                     <p className="w-2 h-2 bg-green-500 rounded-full" />

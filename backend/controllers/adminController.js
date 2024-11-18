@@ -10,12 +10,13 @@ import jwt from 'jsonwebtoken'
 const addService = async (req, res) => {
     try {
 
-        const { name, service, about, description, fee } = req.body
+        const { name, service, about, description, fee, stripe_product_id
+         } = req.body
         const imageFile = req.file
 
         console.log(imageFile)
         // checking for all data to add service
-        if (!name || !service || !about || !description || !imageFile || !fee ) {
+        if (!name || !service || !about || !description || !imageFile || !fee || stripe_product_id ) {
             return res.json({ success: false , message: "Missing Details"})
         } 
 
@@ -39,6 +40,7 @@ const addService = async (req, res) => {
         const imageUrl = imageUpload.secure_url
 
         const serviceData = {
+            stripe_product_id,
             name,
             service, 
             about, 

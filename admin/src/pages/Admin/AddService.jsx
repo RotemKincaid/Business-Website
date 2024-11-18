@@ -12,6 +12,7 @@ const AddService = () => {
   const [type, setType] = useState('')
   const [about, setAbout] = useState('')
   const [fee, setFee] = useState('')
+  const [stripeProductId, setStripeProductId] = useState('')
   const [description, setDescription] = useState('')
 
   const { backendUrl, aToken } = useContext(AdminContext)
@@ -34,6 +35,8 @@ const AddService = () => {
       formData.append('about', about)
       formData.append('fee', Number(fee))
       formData.append('description', description)
+      formData.append('stripe_product_id', stripeProductId)
+
 
       const { data } = await axios.post(backendUrl + '/api/admin/add-service', formData, { headers: { aToken }})
 
@@ -45,6 +48,7 @@ const AddService = () => {
         setAbout('')
         setDescription('')
         setFee('')
+        setStripeProductId('')
       } else {
         toast.error(data.message)
       }
@@ -78,6 +82,11 @@ const AddService = () => {
             <div className="w-full lg:flex-1 flex flex-col gap-4">
               <p>Service Type</p>
               <input onChange={(e) => setType(e.target.value)}  className="border rounded px-3 py-2" type="text" placeholder="Type" value={type} required />
+            </div>
+
+            <div className="w-full lg:flex-1 flex flex-col gap-4">
+              <p>Stripe Product ID</p>
+              <input onChange={(e) => setStripeProductId(e.target.value)}  className="border rounded px-3 py-2" type="text" placeholder="Type" value={stripeProductId} required />
             </div>
 
             <div className="w-full lg:flex-1 flex flex-col gap-4">

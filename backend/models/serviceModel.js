@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 
 const serviceSchema = new mongoose.Schema({
+    stripe_product_id: { type: String, required: true },
     name: { type: String, required: true },
     service: { type: String, required: true },
     about: { type: String, required: true },

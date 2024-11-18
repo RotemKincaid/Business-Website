@@ -1,12 +1,16 @@
 import { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Appointment = () => {
   const { serviceId } = useParams()
-  const { treatmentsData, currencySymbol } = useContext(AppContext)
+  const { services, currencySymbol, backendUrl, token, getServicesData } = useContext(AppContext)
   const daysOfWeek = ['SUN', 'MON', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+
+  const navigate = useNavigate()
 
   const [ serviceInfo, setServiceinfo ] = useState(null)
   const [ serviceSlots, setServiceSlots ] = useState([])
@@ -15,7 +19,7 @@ const Appointment = () => {
 
 
   const fetchServiceInfo = async () => {
-    const info = await treatmentsData.find((item) => JSON.stringify(item._id) === serviceId
+    const info = await services.find((item) => item._id === serviceId
     )
     setServiceinfo(info)
   }
@@ -50,12 +54,23 @@ const Appointment = () => {
       while (currentDate < endTime) {
         let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-        // add slot to array
-        timeSlots.push({
-          datetime: new Date(currentDate),
-          time: formattedTime
-        })
+        let day = currentDate.getDate()
+        let month = currentDate.getMonth() + 1
+        let year = currentDate.getFullYear()
 
+        const slotDate = day + "_" + month + "_" + year
+        const slotTime = formattedTime
+
+        const isSlotAvailable = serviceInfo.slots_booked[slotDate] && serviceInfo.slots_booked[slotDate].includes(slotTime) ? false : true
+
+        if (isSlotAvailable) {
+          // add slot to array
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime
+          })
+        }
+      
         // increment current time by 30 minutes
         currentDate.setMinutes(currentDate.getMinutes() + 90)
 
@@ -65,24 +80,52 @@ const Appointment = () => {
     }
   }
 
+  const bookAppointment = async () => {
+    if (!token) {
+      toast.warn('Login to book appointment')
+      return navigate('/login')
+    }
+
+    try {
+
+      const date = serviceSlots[slotIndex][0].datetime
+
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+
+      const slotDate = day + "_" + month + "_" + year
+
+      const { data } = await axios.post(backendUrl + '/api/user/book-appointment', {serviceId, slotDate, slotTime}, {headers: {token}})
+
+      if (data.success) {
+        toast.success(data.message)
+        getServicesData()
+        navigate('/my-appointments')
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  }
+
   useEffect(() => {
     fetchServiceInfo()
-  }, treatmentsData, serviceId )
+  }, [services, serviceId] )
 
   useEffect(() => {
     getAvailableSlots()
   }, [serviceInfo])
 
-  useEffect(() => {
-    console.log(serviceSlots)
-  }, [serviceSlots])
 
   return serviceInfo && (
     <div>
       {/* --------- Service Details -------- */}
       <div className='flex flex-col sm:flex-row gap-4'>
         <div>
-          <img className="bg-primary w-[400px] sm:max-w-[90vw] rounded-lg" src={serviceInfo.image} alt="" />
+          <img className="bg-primary w-[400px] sm:max-w-[90vw] rounded-lg" src={assets.scar} alt="" />
         </div>
         <div className='flex-1 border border-gray-400 rounded-lg p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0'>
           {/* ------- service info - name -------  */}
@@ -97,7 +140,7 @@ const Appointment = () => {
             <p className='text-sm text-gray-500 max-w-[700px] mt-1'>{serviceInfo.description}</p>
           </div>
           <p className='text-graay-500 font-medium mt-4'>
-            Appointment Fee: <span className='text-gray-600'>{currencySymbol}299</span>
+            Appointment Fee: <span className='text-gray-600'>{currencySymbol}{serviceInfo.fee}</span>
           </p>
         </div>
       </div>
@@ -119,7 +162,7 @@ const Appointment = () => {
             <p onClick={() => setSlotTime(item.time)} className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white': 'text-gray-400 border border-gray-300'}`} key={index}>{item.time.toLowerCase()}</p>
           ))}
         </div>
-        <button className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Book this time slot</button>
+        <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6'>Book this time slot</button>
       </div>
     </div>
   )
