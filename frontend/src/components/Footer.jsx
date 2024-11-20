@@ -1,5 +1,6 @@
 import { assets } from "../assets/assets"
 import { AppContext } from "../context/AppContext"
+import { NavLink } from "react-router-dom"
 
 const Footer = () => {
   const { businessName } = AppContext
@@ -10,18 +11,26 @@ const Footer = () => {
             {/* ------ Left Section ------ */}
             <div>
                 <img className="mb-5 w-40" src={assets.logo} alt="" />
-                <p className="w-full md:w-2/3 text-gray-600 leading-6">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ullam eius esse minima soluta laudantium corrupti accusamus voluptates beatae asperiores rem vel voluptate eligendi, labore voluptatibus, at provident qui. Veniam, nulla?</p>
+                <p className="w-full md:w-2/3 text-gray-600 leading-6">📍 Our Studio: Located inside HD Brows & Skin Rx in Chandler, offering a calm and private environment.
+                <br />⏰ Hours: By appointment only, ensuring personalized care for every client. <br />   Discover the art of paramedical tattooing with Studio Illumi. Learn about our treatments, view our portfolio, and find answers to your questions all in one place.</p>
             </div>
 
             {/* ------ center Section ------ */}
             <div>
                 <p className="text-xl font-medium mb-5">COMPANY</p>
                 <ul className="flex flex-col gap-2 text-gray-600">
-                    <li>Home</li>
-                    <li>About</li>
-                    <li>Contact</li>
-                    <li>Privacy Policy</li>
-
+                    <NavLink to="/">
+                      <li>Home</li>
+                    </NavLink>
+                    <NavLink to="/about">
+                      <li>About</li>
+                    </NavLink>
+                    <NavLink to="/contact">
+                      <li>Contact</li>
+                    </NavLink>
+                    <NavLink to="/privacy">
+                        <li>Privacy Policy</li>
+                    </NavLink>
                 </ul>
             </div>
 
@@ -31,7 +40,7 @@ const Footer = () => {
                 <ul className="flex flex-col gap-2 text-gray-600">
                     {/* To be changed into business email and number */}
                     <li>702-684-1510</li>
-                    <li>rotema23@gmail.com</li>
+                    <li>rotem@studioillumi.com</li>
                 </ul>
             </div>
         </div>
@@ -39,7 +48,7 @@ const Footer = () => {
         {/* ------ Copyright text ------ */}
         <div>
             <hr /> 
-            <p className="py-5 text-sm text-center">Copyright 2024@ {businessName} - All Rights Reserved</p>
+            <p className="py-5 text-sm text-center">Copyright 2024@ Studio Illumi. Your journey to restored confidence starts here.</p>
         </div>
     </div>
   )

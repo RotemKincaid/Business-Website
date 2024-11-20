@@ -17,7 +17,6 @@ const SuccessPage = () => {
 
       if (data.success) {
         updateAppointmentPaymentStatus(appointmentId); // Update the state in AppContext
-        toast.success('Payment status updated successfully!');
       } else {
         toast.error(data.message);
       }
@@ -38,7 +37,7 @@ const SuccessPage = () => {
         );
 
         if (data.success) {
-          toast.success("Payment verified successfully!");
+          // toast.success("Payment verified successfully!");
           setSelectedAppointment(localStorage.getItem('selectedAppointment'))
           if (selectedAppointment) {
             updateAppointmentPaymentStatus(selectedAppointment)

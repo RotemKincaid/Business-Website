@@ -17,6 +17,7 @@ import legs from './legs-appt.png'
 import infoIcon from './info-icon.png'
 import menuIcon from './menuIcon.png'
 import xIcon from './xIcon.png'
+import mePic from './me-pic.png'
 
 export const assets = {
     strech1,
@@ -37,7 +38,8 @@ export const assets = {
     legs,
     infoIcon,
     menuIcon,
-    xIcon
+    xIcon,
+    mePic
 }
 
 export const treatmentsData = [

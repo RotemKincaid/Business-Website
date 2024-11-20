@@ -4,6 +4,8 @@
 import { v2 as cloudinary } from 'cloudinary'
 import serviceModel from '../models/serviceModel.js'
 import jwt from 'jsonwebtoken'
+import appointmentModel from '../models/appointmentModel.js'
+import userModel from '../models/userModel.js'
 
 // API for adding service
 
@@ -89,4 +91,78 @@ const allServices = async (req, res) => {
     }
 }
 
-export { addService, loginAdmin, allServices }
+// API to get all appointments
+const appointmentsAdmin = async (req, res) => {
+    try {
+
+        const appointments = await appointmentModel.find({})
+        res.json({ success: true, appointments})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message})
+    }
+}
+
+// API to cancel appointment
+const cancelAppointment = async (req, res) => {
+
+    try {
+
+        const { appointmentId } = req.body
+
+        const appointmentData = await appointmentModel.findById(appointmentId)
+
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+
+        // releasing doctor slot
+        const { serviceId, slotDate, slotTime } = appointmentData
+        const serviceData = await serviceModel.findById(serviceId)
+
+        let slots_booked = serviceData.slots_booked
+        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+
+        await serviceModel.findByIdAndUpdate(serviceId, { slots_booked })
+
+        res.json({ success: true, message: "Appointment Cancelled"})
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// Api to get Dashboard data for Admin panel
+const adminDashboard = async (req, res) => {
+    try {
+
+        const services = await serviceModel.find({})
+        const users = await userModel.find({})
+        const appointments = await appointmentModel.find({})
+        
+        let earnings = 0
+
+        appointments.map((item) => {
+            if (item.isCompleted || item.payment) {
+                earnings += item.amount
+            } 
+        })
+
+        const dashData = {
+            services: services.length,
+            appointments: appointments.length,
+            clients: users.length,
+            earnings,
+            latestAppointments: appointments.reverse().slice(0, 5)
+        }
+
+        res.json({ success: true, dashData })
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+ 
+
+export { addService, loginAdmin, allServices, appointmentsAdmin, cancelAppointment, adminDashboard }

@@ -10,6 +10,7 @@ import Dashboard from "./pages/Admin/Dashboard"
 import AllAppointments from "./pages/Admin/AllAppointments"
 import AddService from "./pages/Admin/AddService"
 import ServiceList from "./pages/Admin/ServiceList"
+import PrivacyPolicy from "../../frontend/src/pages/PrivacyPolicy"
 
 const App = () => {
 
@@ -27,6 +28,7 @@ const App = () => {
           <Route path='/all-appointments' element={<AllAppointments />}/>
           <Route path='/add-service' element={<AddService />}/>
           <Route path='/service-list' element={<ServiceList />}/>
+          <Route path='/privacy' element={PrivacyPolicy} />
         </Routes>
       </div>
     </div>

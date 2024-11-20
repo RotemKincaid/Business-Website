@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const MyAppointments = () => {
-  const { backendUrl, token, getServicesData, appointments, setAppointments, setSelectedAppointment } = useContext(AppContext);
+  const { backendUrl, token, getServicesData, appointments, setAppointments, setSelectedAppointment, currencySymbol } = useContext(AppContext);
 
   const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -97,11 +97,12 @@ const MyAppointments = () => {
                   <span className="text-sm text-neutral-700 font-medium">Date & Time:</span>{" "}
                   {formatDate(item.slotDate)} | {item.slotTime}
                 </p>
+              <p>{currencySymbol}{item.amount}</p>
                 <p>Status: {item.payment ? <span className="text-green-500">Paid</span> : "Pending Payment"}</p>
               </div>
-              <div></div>
+
               <div className="flex flex-col gap-2 justify-end">
-                {!item.cancelled && !item.payment && (
+                {!item.cancelled && !item.payment && !item.isCompleted && (
                   <button
                     onClick={() => makePayment(item._id, item.serviceData)}
                     className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
@@ -111,12 +112,12 @@ const MyAppointments = () => {
                 )}
                  {item.payment && (
                   <button
-                    className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500"
+                    className="sm:min-w-48 py-2 border rounded text-stone-500 bg-indigo-50"
                   >
                     Paid
                   </button>
                 )}
-                {!item.cancelled && (
+                {!item.cancelled && !item.payment && !item.isCompleted && (
                   <button
                     onClick={() => cancelAppointment(item._id)}
                     className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
@@ -129,6 +130,7 @@ const MyAppointments = () => {
                     Appointment cancelled
                   </button>
                 )}
+                {item.isCompleted && <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">Completed</button>}
               </div>
             </div>
           ))}
