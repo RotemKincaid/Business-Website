@@ -8,7 +8,7 @@ import axios from 'axios'
 const Appointment = () => {
   const { serviceId } = useParams()
   const { services, currencySymbol, backendUrl, token, getServicesData } = useContext(AppContext)
-  const daysOfWeek = ['SUN', 'MON', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+  const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
   const navigate = useNavigate()
 
@@ -27,58 +27,72 @@ const Appointment = () => {
   const getAvailableSlots = async () => {
     setServiceSlots([])
 
-    // getting current date
+    // Getting the current date
     let today = new Date()
 
-    for(let i = 0; i < 7; i++) {
-      // getting date with index
-      let currentDate = new Date(today)
-      currentDate.setDate(today.getDate() + i)
+    for (let i = 0; i < 7; i++) {
+        // Clone the current date and set it to the desired day
+        let currentDate = new Date(today)
+        currentDate.setDate(today.getDate() + i)
 
-      // setting end time date with index
-      let endTime = new Date()
-      endTime.setDate(today.getDate() + i)
-      endTime.setHours(18, 0, 0, 0)
+        // Clone the current date to set the end time
+        let endTime = new Date(currentDate)
+        endTime.setHours(18, 0, 0, 0) // End time is 6:00 PM
 
-      // setting hours
-      if (today.getDate() === currentDate.getDate()) {
-        currentDate.setHours(currentDate.getHours() > 9 ? currentDate.getHours() + 1.5 : 9)
-        currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
-      } else {
-        currentDate.setHours(9)
-        currentDate.setMinutes(0)
-      }
-
-      let timeSlots = []
-
-      while (currentDate < endTime) {
-        let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-
-        let day = currentDate.getDate()
-        let month = currentDate.getMonth() + 1
-        let year = currentDate.getFullYear()
-
-        const slotDate = day + "_" + month + "_" + year
-        const slotTime = formattedTime
-
-        const isSlotAvailable = serviceInfo.slots_booked[slotDate] && serviceInfo.slots_booked[slotDate].includes(slotTime) ? false : true
-
-        if (isSlotAvailable) {
-          // add slot to array
-          timeSlots.push({
-            datetime: new Date(currentDate),
-            time: formattedTime
-          })
+        // Set the start time for each day
+        if (i === 0) {
+            // Today: Start from the current time or 9:00 AM, whichever is later
+            console.log(today.getHours())
+            const startHour = today.getHours() < 9 ? 9 : today.getHours()
+            currentDate.setHours(startHour)
+            currentDate.setMinutes(0)
+        } else {
+            // Future days: Start at 9:00 AM
+            currentDate.setHours(9)
+            currentDate.setMinutes(0)
         }
-      
-        // increment current time by 30 minutes
-        currentDate.setMinutes(currentDate.getMinutes() + 90)
 
-      }
-      setServiceSlots(prev => ([...prev, timeSlots]))
+        // Array to store the day's available slots
+        let timeSlots = []
+
+        // Generate time slots in 2.5-hour intervals
+        while (currentDate < endTime) {
+            let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+            let day = currentDate.getDate()
+            let month = currentDate.getMonth() + 1
+            let year = currentDate.getFullYear()
+
+            const slotDate = `${day}_${month}_${year}`
+            const slotTime = formattedTime
+
+            // Check if the slot is available
+            const isSlotAvailable =
+                serviceInfo.slots_booked[slotDate] &&
+                serviceInfo.slots_booked[slotDate].includes(slotTime)
+                    ? false
+                    : true
+
+            if (isSlotAvailable) {
+                // Add the slot to the array
+                timeSlots.push({
+                    datetime: new Date(currentDate),
+                    time: formattedTime,
+                })
+            }
+
+            // Increment current time by 2.5 hours (150 minutes)
+            currentDate.setMinutes(currentDate.getMinutes() + 150)
+        }
+
+        // Add the day's slots to the service slots
+        setServiceSlots((prev) => [...prev, timeSlots])
+        console.log(serviceSlots)
 
     }
-  }
+}
+
+
 
   const bookAppointment = async () => {
     if (!token) {
@@ -105,6 +119,7 @@ const Appointment = () => {
       } else {
         toast.error(data.message)
       }
+
     } catch (error) {
       console.log(error)
       toast.error(error.message)

@@ -1,9 +1,10 @@
 import { assets } from "../assets/assets"
 import { AppContext } from "../context/AppContext"
 import { NavLink } from "react-router-dom"
+import { useContext } from "react"
 
 const Footer = () => {
-  const { businessName } = AppContext
+  const { businessName } = useContext(AppContext)
 
   return (
     <div className="md:mx-10">
@@ -17,7 +18,7 @@ const Footer = () => {
 
             {/* ------ center Section ------ */}
             <div>
-                <p className="text-xl font-medium mb-5">COMPANY</p>
+                <p className="text-xl font-medium mb-5 uppercase">{businessName}</p>
                 <ul className="flex flex-col gap-2 text-gray-600">
                     <NavLink to="/">
                       <li>Home</li>
@@ -39,8 +40,17 @@ const Footer = () => {
                 <p className="text-xl font-medium mb-5">GET IN TOUCH</p>
                 <ul className="flex flex-col gap-2 text-gray-600">
                     {/* To be changed into business email and number */}
-                    <li>702-684-1510</li>
-                    <li>rotem@studioillumi.com</li>
+                    <li className="flex">                     
+                      <img className="w-5 mr-2" src={assets.phoneIcon} alt=""/>
+                      <p>(480) 701-5587</p>
+                    </li>
+                    <li className="flex">
+                    <img className="w-5 mr-2" src={assets.emailIcon} alt=""/>
+                      rotem@studioillumi.com</li>
+                    <li className="flex">
+                      <img className="w-5 mr-2" src={assets.igIcon} alt=""/>
+                      <a href="https://www.instagram.com/studio_illumi/">@studio_illumi</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -48,7 +58,7 @@ const Footer = () => {
         {/* ------ Copyright text ------ */}
         <div>
             <hr /> 
-            <p className="py-5 text-sm text-center">Copyright 2024@ Studio Illumi. Your journey to restored confidence starts here.</p>
+            <p className="py-5 text-sm text-center">Copyright 2024@ {businessName}. Your journey to restored confidence starts here.</p>
         </div>
     </div>
   )

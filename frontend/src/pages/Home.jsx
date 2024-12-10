@@ -3,6 +3,7 @@ import TreatmentMenu from "../components/TreatmentMenu"
 import Banner from '../components/Banner'
 
 const Home = () => {
+
   return (
     <div>
       <Header />

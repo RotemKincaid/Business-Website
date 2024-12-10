@@ -18,6 +18,9 @@ import infoIcon from './info-icon.png'
 import menuIcon from './menuIcon.png'
 import xIcon from './xIcon.png'
 import mePic from './me-pic.png'
+import igIcon from './igIcon.png'
+import emailIcon from './emailIcon.png'
+import phoneIcon from './phoneIcon.png'
 
 export const assets = {
     strech1,
@@ -39,7 +42,10 @@ export const assets = {
     infoIcon,
     menuIcon,
     xIcon,
-    mePic
+    mePic,
+    igIcon,
+    emailIcon,
+    phoneIcon
 }
 
 export const treatmentsData = [

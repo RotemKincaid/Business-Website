@@ -7,7 +7,7 @@ export const AppContext = createContext();
 const AppContextProvider = (props) => {
   const currencySymbol = "$";
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const businessName = "illumi";
+  const businessName = "Studio Illumi";
 
   const [services, setServices] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") ? localStorage.getItem("token") : false);

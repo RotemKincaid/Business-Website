@@ -40,20 +40,23 @@ const MyProfile = () => {
     }
   }
 
-  return userData && (
+  return userData ? (
     <div className="max-w-lg flex flex-col gap-2 text-sm">
 
       { isEdit 
       ? <label htmlFor="image">
         <div className="inline-block relative cursor-pointer">
           <img className="w-36 rounded opacity-75" src={image ? URL.createObjectURL(image) : userData.image} alt="" />
+          <p className="text-gray-600 relative bottom-8 left-0 bg-gray-200 text-center py-2"><span></span>Click to Upload</p>
+
           <img className="w-10 absolute bottom-12 right-12" src={image ? '' : assets.uploadIcon} alt="" />
         </div>
         <input onChange={(e) => setImage(e.target.files[0])} type="file" id="image" hidden/>
       </label> 
       :
-      <img className="w-36 rounded" src={userData.image} alt="" />
-
+      <div>
+        <img className="w-36 rounded" src={userData.image} alt="" />
+        </div>
       }
       {
         isEdit ?
@@ -123,7 +126,7 @@ const MyProfile = () => {
       </div>
       </div>
     </div>
-  )
+  ) : <div>Please log in or create an account to see your profile</div>
 }
 
 export default MyProfile

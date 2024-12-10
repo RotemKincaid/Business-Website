@@ -16,7 +16,7 @@ const NavBar = () => {
 
   return (
     <div className='flex items-center justify-between text-sm py-4 mb-5 border-b border-b-gray-400'>
-        <img onClick={() => navigate('/')} src={assets.logo} alt="" className='w-2/6 cursor-pointer relative'/>
+        <img onClick={() => navigate('/')} src={assets.logo} alt="" className='sm:w-2/5 w-3/6 cursor-pointer relative'/>
         <ul className='hidden md:flex items-start gap-5 font-medium pt-3'>
             <NavLink to="/">
                 <li>HOME</li>
@@ -64,6 +64,7 @@ const NavBar = () => {
                     <NavLink onClick={() => setShowMenu(false)} to="/services"><p className="px-4 py-2 rounded inline-block">SERVICES</p></NavLink>
                     <NavLink onClick={() => setShowMenu(false)} to="/about"><p className="px-4 py-2 rounded inline-block">ABOUT</p></NavLink>
                     <NavLink onClick={() => setShowMenu(false)} to="/contact"><p className="px-4 py-2 rounded inline-block">CONTACT</p></NavLink>
+                    <NavLink onClick={() => setShowMenu(false)} to="/login"><p className="px-4 py-2 rounded inline-block">LOGIN</p></NavLink>
                 </ul>
             </div>
         </div>

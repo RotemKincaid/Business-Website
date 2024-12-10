@@ -13,6 +13,8 @@ import appointmentsIcon from './appointmentsIcon.png'
 import clientsIcon from './clientsIcon.png'
 import listIcon from './listIcon.png'
 import checkIcon from './checkIcon.png'
+import ombre from './ombre-brow-icon.png'
+import combo from './nano-combo-brow-icon.png'
 
 export const assets = {
     add_icon,
@@ -29,5 +31,7 @@ export const assets = {
     appointmentsIcon,
     clientsIcon,
     listIcon,
-    checkIcon
+    checkIcon,
+    ombre,
+    combo
 }

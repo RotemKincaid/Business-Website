@@ -24,15 +24,17 @@ const About = () => {
             <li>Stretch Mark Camouflage: This treatment uses custom-blended pigments to reduce the appearance of stretch marks, whether they’re new or old. By restoring your skin’s natural tone and texture, I help stretch marks blend in, leaving your skin looking smoother and more even.</li>
 
           </ul>
-          <b></b>
-          {/* <p>At {businessName}, I understand that every client is unique. We take pride in offering personalized treatments tailored to your specific skin type and goals. Our mission is to provide not just a cosmetic service, but also a boost to your self-esteem by delivering results that look and feel natural. We’re dedicated to making sure you leave our studio feeling empowered and confident.
+          <p>At {businessName}, I understand that every client is unique. I take pride in offering personalized treatments tailored to your specific skin type and goals. My mission is to provide not just a cosmetic service, but also a boost to your self-esteem by delivering results that look and feel natural. I am dedicated to making sure you leave my studio feeling empowered and confident.
+         </p>
 
-          Our Commitment to You:
+            {/* <b className="text-gray-800">My Commitment to You:</b> */}
 
-          Safe and professional treatments
-          Custom solutions for each individual
-          A supportive and welcoming environment
-          Let us help you regain confidence in your appearance with treatments that make a difference. Book a consultation today and take the first step toward loving the skin you’re in!</p> */}
+              {/* <ul>
+                <li>Safe and professional treatments</li> 
+                <li>Custom solutions for each individual</li> 
+                <li>A supportive and welcoming environment</li>   */}
+              Let me help you regain confidence in your appearance with treatments that make a difference. Book a consultation today and take the first step toward loving the skin you’re in!
+              {/* </ul> */}
           </div>
       </div>
 

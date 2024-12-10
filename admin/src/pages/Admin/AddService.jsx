@@ -6,8 +6,8 @@ import axios from "axios"
 
 const AddService = () => {
 
-  // const [serviceImg, setServiceImg] = useState(false)
   const [serviceIcon, setServiceIcon] = useState(false)
+  const [serviceImg, setServiceImg] = useState(false)
   const [name, setName] = useState('')
   const [type, setType] = useState('')
   const [about, setAbout] = useState('')
@@ -27,8 +27,7 @@ const AddService = () => {
 
       const formData = new FormData ()
 
-      console.log(serviceIcon)
-      // formData.append('image', serviceImg)
+      formData.append('image', serviceImg)
       formData.append('image_icon', serviceIcon)
       formData.append('name', name)
       formData.append('service', type)
@@ -42,6 +41,7 @@ const AddService = () => {
 
       if (data.success) {
         toast.success(data.message)
+        setServiceImg(false)
         setServiceIcon(false)
         setName('')
         setType('')
@@ -60,7 +60,7 @@ const AddService = () => {
   }
 
   return (
-    <form onSubmit={onSubmitHandler} className="m-5 w-full">
+    <form onSubmit={onSubmitHandler} className="m-5 w-full" encType="multipart/form-data">
       <p className="mb-3 text-lg font-medium">
       Add Service
       </p>
@@ -69,8 +69,14 @@ const AddService = () => {
           <label htmlFor="service-img">
             <img className="w-16 bg-gray-100 rounded-full cursor-pointer" src={serviceIcon ? URL.createObjectURL(serviceIcon) : assets.uploadIcon} alt="" />
           </label>
-          <input onChange={(e) => setServiceIcon(e.target.files[0]) } type="file" id="service-img" hidden/>
+          <input onChange={(e) => setServiceIcon(e.target.files[0]) } type="file" id="service-img" name="image_icon" hidden/>
           <p>Upload Service <br /> Icon</p>
+
+          <label htmlFor="service-photo">
+            <img className="w-16 bg-gray-100 rounded cursor-pointer" src={serviceImg ? URL.createObjectURL(serviceImg) : assets.uploadIcon} alt="" />
+          </label>
+          <input onChange={(e) => setServiceImg(e.target.files[0]) } type="file" id="service-photo" name="image" hidden/>
+          <p>Upload Service <br /> Image</p>
         </div>
 
         <div className="flex flex-col lg:flex-row items-start gap-10 text-gray-600">

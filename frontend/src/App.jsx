@@ -4,7 +4,6 @@ import Services from './pages/Services'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
-import Treatment from './pages/Treatment'
 import MyProfile from './pages/MyProfile'
 import MyAppointments from './pages/MyAppointments'
 import Appointment from './pages/Appointment'
@@ -29,15 +28,12 @@ const App = () => {
         <Route path="/about" element={<About />}/>
         <Route path="/contact" element={<Contact />}/>
         <Route path="/login" element={<Login />}/>
-        <Route path="/treatment" element={<Treatment />}/>
         <Route path="/my-profile" element={<MyProfile />}/>
         <Route path="/my-appointments" element={<MyAppointments />}/>
         <Route path="/appointment/:serviceId" element={<Appointment />}/>
         <Route path="/cancel" element={<Cancel />}/>
         <Route path="/success" element={<Success />}/>
       </Routes>
-     
-
       <Footer />
     </div>
   )

@@ -18,9 +18,11 @@ const Contact = () => {
             Chandler, AZ 85248 <br />
             USA
           </p>
-          <p className="text-gray-500">Tel (702) 684-1510 <br/> rotem@studioillumi.com</p>
-
-          <button></button>
+          <p className="text-gray-500">Tel (480) 701-5587 <br/> rotem@studioillumi.com</p>
+          <a className="flex" href="https://www.instagram.com/studio_illumi/">
+              <img className="w-5 mr-2" src={assets.igIcon} alt=""/>
+              <p>@studio_illumi</p>
+          </a>
         </div>
         
       </div>

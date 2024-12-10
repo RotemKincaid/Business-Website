@@ -132,15 +132,17 @@ const bookAppointment = async (req, res) => {
 
         // checking for slots availability
         if (slots_booked[slotDate]) {
-        if (slots_booked[slotDate].includes(slotTime)) {
-            return res.json({ success: false, message: 'Slot not available' })
+            if (slots_booked[slotDate].includes(slotTime)) {
+                return res.json({ success: false, message: 'Slot not available' })
+            } else {
+                slots_booked[slotDate].push(slotTime)
+            }
         } else {
+            slots_booked[slotDate] = []
             slots_booked[slotDate].push(slotTime)
         }
-        } else {
-        slots_booked[slotDate] = []
-        slots_booked[slotDate].push(slotTime)
-        }
+
+        console.log(slots_booked)
 
         const userData = await userModel.findById(userId).select('-password')
 
