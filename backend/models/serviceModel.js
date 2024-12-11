@@ -10,7 +10,12 @@ const serviceSchema = new mongoose.Schema({
     image_icon: { type: String, required: true },
     fee: { type: Number, required: true },
     date: { type: Number, required: true },
-    slots_booked: { type: Object, default: {}}
+    slotTimes: {
+        type: [String], // Array of time slots (e.g., ["09:00 AM", "10:30 AM", "01:00 PM", "03:30 PM"])
+        default: [
+          '09:00 AM', '10:30 AM', '01:00 PM', '02:30 PM', '04:00 PM', '05:30 PM'
+        ]
+    }
 }, { minimize: false })
 
 const serviceModel = mongoose.models.service || mongoose.model('service', serviceSchema)

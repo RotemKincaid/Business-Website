@@ -121,34 +121,27 @@ const updateProfile = async (req, res) => {
 
 // API to book an appointment
 const bookAppointment = async (req, res) => {
-
     try {
-        
-        const { userId, serviceId, slotDate, slotTime } = req.body
-
-        const serviceData = await serviceModel.findById(serviceId)
-
-        let slots_booked = serviceData.slots_booked
-
-        // checking for slots availability
-        if (slots_booked[slotDate]) {
-            if (slots_booked[slotDate].includes(slotTime)) {
-                return res.json({ success: false, message: 'Slot not available' })
-            } else {
-                slots_booked[slotDate].push(slotTime)
-            }
-        } else {
-            slots_booked[slotDate] = []
-            slots_booked[slotDate].push(slotTime)
-        }
-
-        console.log(slots_booked)
-
-        const userData = await userModel.findById(userId).select('-password')
-
-        delete serviceData.slots_booked
-
-        const appointmentData = {
+      const { userId, serviceId, slotDate, slotTime } = req.body;
+  
+      // Step 1: Check if the slot is already booked
+      const existingAppointment = await appointmentModel.findOne({
+        serviceId,
+        slotDate,
+        slotTime,
+        cancelled: false,
+        isCompleted: false,
+      });
+  
+      if (existingAppointment) {
+        return res.json({ success: false, message: 'Slot already booked' });
+      }
+  
+      // Step 2: Save the new appointment
+      const serviceData = await serviceModel.findById(serviceId);
+      const userData = await userModel.findById(userId).select('-password');
+  
+      const newAppointment = new appointmentModel({
         userId,
         serviceId,
         userData,
@@ -156,22 +149,22 @@ const bookAppointment = async (req, res) => {
         amount: serviceData.fee,
         slotTime,
         slotDate,
-        date: Date.now()
-        }
-
-        const newAppointment = new appointmentModel(appointmentData)
-        await newAppointment.save()
-
-        // save new slots data in serviceData
-        await serviceModel.findByIdAndUpdate(serviceId, { slots_booked })
-
-        res.json({ success: true, message: "Appointment Booked"})
-
+        date: Date.now(),
+      });
+  
+      await newAppointment.save();
+  
+      // Step 3: Return the updated available slots
+      res.json({
+        success: true,
+        message: 'Appointment booked successfully',
+      });
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+      console.error('Error booking appointment:', error);
+      res.json({ success: false, message: error.message });
     }
-}
+  };
+  
 
 // API to get user appointments
 const appointmentList = async (req, res) => {
@@ -179,6 +172,9 @@ const appointmentList = async (req, res) => {
         
         const { userId } = req.body
         const appointments = await appointmentModel.find({ userId })
+        if (!appointments || appointments.length === 0) {
+            return res.status(404).json({ success: false, message: "No appointments found." });
+        }
 
         res.json({ success: true,  appointments})
     } catch (error) {
@@ -186,6 +182,67 @@ const appointmentList = async (req, res) => {
         res.json({ success: false, message: error.message })
     }
 }
+
+// API to fetch available appointments
+const getAvailableAppointments = async (req, res) => {
+    try {
+        const { date } = req.query;  // Get date from query params
+
+        // Normalize to start of day in UTC (if necessary)
+        const selectedDate = new Date(date);  // Parse the date from query
+        const startOfDayUTC = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate()));
+        const endOfDayUTC = new Date(startOfDayUTC);
+        endOfDayUTC.setUTCDate(startOfDayUTC.getUTCDate() + 1);  // Next day (23:59:59)
+
+        // Step 1: Fetch all services (since the user can select any service)
+        const services = await serviceModel.find();
+        if (!services || services.length === 0) {
+            return res.json({ success: false, message: 'No services found' });
+        }
+    
+        // Step 2: Get all appointments booked for any service on this date
+        const bookedAppointments = await appointmentModel.find({
+            slotDate: date,
+            cancelled: false,
+            isCompleted: false,
+        });
+    
+        // Step 3: Gather all booked times across all appointments
+        const bookedTimes = bookedAppointments.map(appointment => appointment.slotTime);
+    
+        // Step 4: Get all available slots from all services, but exclude booked times
+        const availableSlots = services.map(service => {
+  
+            // Filter out the booked times from the service's slotTimes
+            const availableTimes = service.slotTimes.filter(slotTime => {
+            const isBooked = bookedTimes.includes(slotTime);  // Check if this time is already booked
+            console.log(`SlotTime: ${slotTime}, Is Booked: ${isBooked}`);
+            return !isBooked;
+            });
+    
+            return {
+            serviceId: service._id,
+            serviceName: service.name,
+            availableTimes,
+            }
+        })
+  
+        //   Step 5: If no slots are available for any service, return an error
+        if (availableSlots.every(service => service.availableTimes.length === 0)) {
+            return res.json({ success: false, message: 'No available slots for this date' });
+        }
+    
+        // Step 6: Return available slots for all services on this date
+        res.json({
+            success: true,
+            availableSlots,
+        });
+    } catch (error) {
+      console.error('Error fetching available slots:', error);
+      res.json({ success: false, message: 'Error fetching available slots', error: error.message });
+    }
+};
+  
 
 // API to cancel appointment
 const cancelAppointment = async (req, res) => {
@@ -207,10 +264,10 @@ const cancelAppointment = async (req, res) => {
         const { serviceId, slotDate, slotTime } = appointmentData
         const serviceData = await serviceModel.findById(serviceId)
 
-        let slots_booked = serviceData.slots_booked
-        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        let slotTimes = serviceData.slotTimes
+        slotTimes[slotDate] = slotTimes[slotDate].filter(e => e !== slotTime)
 
-        await serviceModel.findByIdAndUpdate(serviceId, { slots_booked })
+        await serviceModel.findByIdAndUpdate(serviceId, { slotTimes })
 
         res.json({ success: true, message: "Appointment Cancelled"})
         
@@ -316,4 +373,4 @@ const verifyPayment = async (req, res) => {
 }
 
 
-export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, appointmentList, cancelAppointment, makePayment, updatePayment, verifyPayment }
+export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, appointmentList, cancelAppointment, makePayment, updatePayment, verifyPayment, getAvailableAppointments }

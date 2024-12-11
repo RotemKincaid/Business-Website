@@ -123,7 +123,7 @@ const AddService = () => {
         image_icon: { type: String, required: true },
         fee: { type: Number, required: true },
         date: { type: Number, required: true },
-        slots_booked: { type: Object, default: {}} 
+        slotTimes: { type: Object, default: {}} 
       */}
     </form>
   )

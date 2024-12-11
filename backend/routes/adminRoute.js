@@ -6,7 +6,7 @@ import authAdmin from '../middleware/authAdmin.js'
 const adminRouter = express.Router()
 
 adminRouter.post('/add-service', authAdmin , upload.fields([
-    { name: 'image', maxCount: 5 }, // for multiple service images
+    { name: 'image', maxCount: 1 }, // for a single service images
     { name: 'image_icon', maxCount: 1 } // for a single service icon
   ]), addService)
 adminRouter.post('/login', loginAdmin)

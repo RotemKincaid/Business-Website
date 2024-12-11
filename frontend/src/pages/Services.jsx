@@ -7,7 +7,7 @@ const Services = () => {
   const navigate = useNavigate()
   const { service } = useParams()
   const [ filterTreatment, setFilterTreatment ] = useState([])
-  const [showFilter, setShowFilter ] = useState(false)
+  const [ showFilter, setShowFilter ] = useState(false)
   const { services } = useContext(AppContext)
 
   const applyFilter = () => {

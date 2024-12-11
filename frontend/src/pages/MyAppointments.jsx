@@ -4,27 +4,37 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const MyAppointments = () => {
-  const { backendUrl, token, getServicesData, appointments, setAppointments, setSelectedAppointment, currencySymbol } = useContext(AppContext);
+  const { backendUrl, token, getServicesData, appointments, setAppointments, getUserAppointments, setSelectedAppointment, currencySymbol } = useContext(AppContext);
 
-  const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const formatDate = (slotDate) => {
-    const dateArray = slotDate.split("_");
-    return months[Number(dateArray[1])] + " " + dateArray[0] + " " + dateArray[2];
-  };
-
-  const getUserAppointments = async () => {
+  const formatDateString = (dateStr) => {
     try {
-      const { data } = await axios.get(backendUrl + "/api/user/appointments", { headers: { token } });
-
-      if (data.success) {
-        setAppointments(data.appointments.reverse());
+      // Check if the date is in ISO format (YYYY-MM-DD)
+      if (dateStr.includes('-')) {
+        // If the date is in ISO format (YYYY-MM-DD), we can directly parse it
+        const jsDate = new Date(dateStr);
+        if (isNaN(jsDate)) throw new Error("Invalid Date");
+  
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return jsDate.toLocaleDateString('en-US', options);
       }
+  
+      // If the date is in DD_MM_YYYY format (e.g., '23_11_2024')
+      const dateParts = dateStr.split('_');
+      if (dateParts.length !== 3) throw new Error("Invalid date format");
+  
+      const [day, month, year] = dateParts;
+      const jsDate = new Date(year, month - 1, day);  // month - 1 because months are 0-indexed
+  
+      if (isNaN(jsDate)) throw new Error("Invalid Date");
+  
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return jsDate.toLocaleDateString('en-US', options);
+  
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error("Error formatting date:", error);
+      return 'Invalid Date';  // Return fallback value
     }
-  };
+  }
 
   const cancelAppointment = async (appointmentId) => {
     try {
@@ -94,9 +104,9 @@ const MyAppointments = () => {
                 <p className="text-neutral-800 font-semibold">{item.serviceData.service}</p>
                 <p>{item.serviceData.about}</p>
                 <p className="text-xs">
-                  <span className="text-sm text-neutral-700 font-medium">Date & Time:</span>{" "}
-                  {formatDate(item.slotDate)} | {item.slotTime}
-                </p>
+                <span className="text-sm text-neutral-700 font-medium">Date & Time:</span>{" "}
+                {formatDateString(item.slotDate)} | {item.slotTime}
+              </p>
               <p>{currencySymbol}{item.amount}</p>
                 <p>Status: {item.payment ? <span className="text-green-500">Paid</span> : "Pending Payment"}</p>
               </div>

@@ -15,11 +15,11 @@ const addService = async (req, res) => {
 
         const { name, service, about, description, fee, stripe_product_id
          } = req.body
-         const imageIcon = req.files['image_icon'] ? req.files['image_icon'][0] : null
-         const imageFiles = req.files['image'] ? req.files['image'] : []
+        const imageIcon = req.files['image_icon'] ? req.files['image_icon'][0] : null;
+        const imageFile = req.files['image'] ? req.files['image'][0] : null; // Expecting only one image
      
         // checking for missing data 
-        if (!name || !service || !about || !description || !imageIcon || !imageFiles || !fee || !stripe_product_id ) {
+        if (!name || !service || !about || !description || !imageIcon || !imageFile || !fee || !stripe_product_id ) {
             return res.json({ success: false , message: "Missing Details"})
         } 
 
@@ -42,12 +42,9 @@ const addService = async (req, res) => {
         const imageIconUpload = await cloudinary.uploader.upload(imageIcon.path, { resource_type: "image" })
         const imageIconUrl = imageIconUpload.secure_url
 
-        // Upload image to Cloudinary (you can handle multiple images if needed)
-        const imageUploadPromises = imageFiles.map(file =>
-          cloudinary.uploader.upload(file.path, { resource_type: "image" })
-        )
-
-        const imageUrls = await Promise.all(imageUploadPromises) // Array of URLs for the images
+        // Upload the main service image to Cloudinary
+        const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: "image" });
+        const imageUrl = imageUpload.secure_url;
 
         const serviceData = {
             stripe_product_id,
@@ -56,7 +53,7 @@ const addService = async (req, res) => {
             about, 
             description,
             image_icon: imageIconUrl, // Cloudinary URL for the icon
-            images: imageUrls.map(upload => upload.secure_url), // Cloudinary URLs for the images
+            image: imageUrl, // Cloudinary URL for the image
             fee,
             date: Date.now()
         }
@@ -103,15 +100,22 @@ const allServices = async (req, res) => {
 // API to get all appointments
 const appointmentsAdmin = async (req, res) => {
     try {
+        const appointments = await appointmentModel.find({});
+        // console.log("Appointments Found: ", appointments);  // Log appointments to see if data exists
 
-        const appointments = await appointmentModel.find({})
-        res.json({ success: true, appointments})
-        
+        // Format the response to include slot date and time in the expected structure
+        // const formattedAppointments = appointments.map(appointment => ({
+        //     slotDate: appointment.slotDate, // assuming `slotDate` is stored in the appointment object
+        //     slotTime: appointment.slotTime, // assuming `slotTime` is stored in the appointment object
+        //     // Any additional data you may need
+        // }));
+
+        res.json({ success: true, appointments }); // Send back as 'slots' for the frontend to use
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message})
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
 // API to cancel appointment
 const cancelAppointment = async (req, res) => {
@@ -128,10 +132,10 @@ const cancelAppointment = async (req, res) => {
         const { serviceId, slotDate, slotTime } = appointmentData
         const serviceData = await serviceModel.findById(serviceId)
 
-        let slots_booked = serviceData.slots_booked
-        slots_booked[slotDate] = slots_booked[slotDate].filter(e => e !== slotTime)
+        let slotTimes = serviceData.slotTimes
+        slotTimes[slotDate] = slotTimes[slotDate].filter(e => e !== slotTime)
 
-        await serviceModel.findByIdAndUpdate(serviceId, { slots_booked })
+        await serviceModel.findByIdAndUpdate(serviceId, { slotTimes })
 
         res.json({ success: true, message: "Appointment Cancelled"})
         
