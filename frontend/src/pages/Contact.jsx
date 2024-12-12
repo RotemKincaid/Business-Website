@@ -12,12 +12,12 @@ const Contact = () => {
 
         <div className="flex flex-col justify-center items-start gap-6">
           <p className="font-semibold text-lg text-gray-600">Currently located at</p>
-          <p className="text-gray-500 "><p className="font-bold">HD Brow & Skin Rx</p><br />
+          <div className="text-gray-500 "><p className="font-bold">HD Brow & Skin Rx</p><br />
             3125 S Alma School <br />
             Unit 7 <br />
             Chandler, AZ 85248 <br />
             USA
-          </p>
+          </div>
           <p className="text-gray-500">Tel (480) 701-5587 <br/> rotem@studioillumi.com</p>
           <a className="flex" href="https://www.instagram.com/studio_illumi/">
               <img className="w-5 mr-2" src={assets.igIcon} alt=""/>

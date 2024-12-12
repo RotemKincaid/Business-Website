@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Services from './pages/Services'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import Login from './pages/Login'
 import MyProfile from './pages/MyProfile'
 import MyAppointments from './pages/MyAppointments'
@@ -11,7 +12,7 @@ import NavBar from './components/NavBar'
 import Footer from './components/Footer'
 import Cancel from "./components/Cancel"
 import Success from "./components/Success"
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/services/:service" element={<Services />}/>
         <Route path="/about" element={<About />}/>
         <Route path="/contact" element={<Contact />}/>
+        <Route path="/privacy" element={<PrivacyPolicy />}/>
         <Route path="/login" element={<Login />}/>
         <Route path="/my-profile" element={<MyProfile />}/>
         <Route path="/my-appointments" element={<MyAppointments />}/>

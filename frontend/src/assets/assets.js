@@ -21,6 +21,7 @@ import mePic from './me-pic.png'
 import igIcon from './igIcon.png'
 import emailIcon from './emailIcon.png'
 import phoneIcon from './phoneIcon.png'
+import servicesImg from './services-pic.png'
 
 export const assets = {
     strech1,
@@ -45,7 +46,8 @@ export const assets = {
     mePic,
     igIcon,
     emailIcon,
-    phoneIcon
+    phoneIcon,
+    servicesImg
 }
 
 export const treatmentsData = [
