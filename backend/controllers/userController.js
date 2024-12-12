@@ -246,34 +246,28 @@ const getAvailableAppointments = async (req, res) => {
 
 // API to cancel appointment
 const cancelAppointment = async (req, res) => {
-
     try {
+        const { userId, appointmentId } = req.body;
 
-        const { userId, appointmentId } = req.body
+        // Step 1: Find the appointment data
+        const appointmentData = await appointmentModel.findById(appointmentId);
 
-        const appointmentData = await appointmentModel.findById(appointmentId)
+        // Step 2: Verify the appointment belongs to the user
+        if (appointmentData.userId.toString() !== userId.toString()) {
+            return res.json({ success: false, message: "Unauthorized action" });
+        }
 
-        // verify appointment user id
-        if (appointmentData.userId !== userId) {
-            return res.json({ success: false, message: "Unauthorized action"})
-        } 
+        // Step 3: Mark the appointment as cancelled
+        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true });
 
-        await appointmentModel.findByIdAndUpdate(appointmentId, { cancelled: true })
+        // Step 4: If necessary, update other models or perform other actions (this could be logging, notifying, etc.)
+        // As you mentioned, we don't need to adjust the service slot anymore, just the appointment itself.
 
-        // releasing doctor slot
-        const { serviceId, slotDate, slotTime } = appointmentData
-        const serviceData = await serviceModel.findById(serviceId)
+        res.json({ success: true, message: "Appointment Cancelled" });
 
-        let slotTimes = serviceData.slotTimes
-        slotTimes[slotDate] = slotTimes[slotDate].filter(e => e !== slotTime)
-
-        await serviceModel.findByIdAndUpdate(serviceId, { slotTimes })
-
-        res.json({ success: true, message: "Appointment Cancelled"})
-        
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 }
 

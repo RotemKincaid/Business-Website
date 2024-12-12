@@ -7,7 +7,7 @@ export const AppContext = createContext();
 const AppContextProvider = (props) => {
   const currencySymbol = "$";
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const businessName = "Studio Illumi";
+  const businessName = "Studio illumi";
 
   const [services, setServices] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") ? localStorage.getItem("token") : false);
@@ -43,19 +43,19 @@ const AppContextProvider = (props) => {
     }
   };
 
-  const getUserAppointments = async () => {
-    try {
-      const { data } = await axios.get(backendUrl + "/api/user/appointments", { headers: { token } });
-      if (data.success) {
-        setAppointments(data.appointments.reverse());
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error);
-    }
-  };
+  // const getUserAppointments = async () => {
+  //   try {
+  //     const { data } = await axios.get(backendUrl + "/api/user/appointments", { headers: { token } });
+  //     if (data.success) {
+  //       setAppointments(data.appointments.reverse());
+  //     } else {
+  //       toast.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //     console.log(error);
+  //   }
+  // };
 
   const updateAppointmentPaymentStatus = (appointmentId) => {
     setAppointments((prev) =>
@@ -80,7 +80,7 @@ const AppContextProvider = (props) => {
     loadUserProfileData,
     appointments,
     setAppointments,
-    getUserAppointments,
+    // getUserAppointments,
     updateAppointmentPaymentStatus,
     selectedAppointment,
     setSelectedAppointment
@@ -93,7 +93,7 @@ const AppContextProvider = (props) => {
   useEffect(() => {
     if (token) {
       loadUserProfileData();
-      getUserAppointments();
+      // getUserAppointments();
     } else {
       setUserData(false);
       setAppointments([]);
